@@ -15,16 +15,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class CandPSrevlet
+ * Servlet implementation class MemberServlet
  */
-@WebServlet("/CandPSrevlet")
-public class CandPSrevlet extends HttpServlet {
+@WebServlet("/MemberServlet")
+public class MemberServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public CandPSrevlet() {
+    public MemberServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -36,54 +36,44 @@ public class CandPSrevlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		response.setContentType("text/html;charset=UTF-8");
 
-		// リクエストパラメータの取得
 		String action = request.getParameter("action");
 
-		String userName = null;
-		String userPass = null;
+		String memName = null;
+		int memHeight = 0;
+		String memBirth = null;
+		String memBlood = null;
 
-		// データベースへ接続
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
+			Class.forName("com.maysql.cj.jdbc.Driver");
 			String url = "jdbc:mysql://localhost/training?serverTimezone=UTC&useSSL=false";
 			String name = "root";
 			String pass = "sht30";
 
 			Connection con = DriverManager.getConnection(url,name,pass);
 
-			String sql = "SELECT * FROM userinfo";
-
+			String sql = "SELECT * FROM member";
 			PreparedStatement st = con.prepareStatement(sql);
-
 			ResultSet rs = st.executeQuery();
-			// DBからメンバーの情報を取得
+
 			while(rs.next()) {
-			userName = rs.getString("name");
-			userPass = rs.getString("pass");
+				memName = rs.getString("name");
+				memHeight = rs.getInt("height");
+				memBirth = rs.getString("birthday");
+				memBlood = rs.getString("bloodtype");
 			}
 
-			rs.close();
 			st.close();
+			rs.close();
 			con.close();
 
-			if(action.equals("login")) {
-				// 入力値の取得
-				String yourName = request.getParameter("yourname");
-				String yourPass = request.getParameter("pw");
+			HttpSession session = request.getSession();
+			session.setAttribute("member",memName);
 
-				// 入力値とDB内データの一致確認
-				if(yourName.equals(userName)&&yourPass.equals(userPass)) {
-					HttpSession session = request.getSession();
-					session.setAttribute("okLogin", yourName);
-
-					RequestDispatcher rd = request.getRequestDispatcher("/intopage.jsp");
-					rd.forward(request,response);
-			}
-
-			}
+			RequestDispatcher rd = request.getRequestDispatcher("/member.jsp");
+			rd.forward(request, response);
 
 		} catch (Exception e) {
-			System.out.println("データベースの接続に失敗しました。");
+			e.printStackTrace();
 		}
 	}
 
