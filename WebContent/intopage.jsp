@@ -12,10 +12,8 @@
 <h3 style="color:#FF6347">${message}</h3>
 
 <p>
-
-<a href="member.jsp?name=action">Cinderella and Prince</a>
+<a href="member.jsp">Cinderella and Prince</a>
 </p>
-
 <p>
 <a href="news.jsp">News</a>
 </p>

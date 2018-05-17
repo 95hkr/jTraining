@@ -15,41 +15,6 @@ public class CandPDAO {
 		getConnection();
 	}
 
-	public List<String> findAll() {
-		if(con == null)
-			getConnection();
-
-		PreparedStatement st = null;
-		ResultSet rs = null;
-
-		try {
-			String sql = "SELECT * FROM userinfo"; // userinfoテーブルの表示を変数sqlに代入
-			st = con.prepareStatement(sql);
-			rs = st.executeQuery();
-
-			List<String> account = new ArrayList<String>(); // ArrayListクラスのインスタンス化
-
-			// DBからアカウントの情報を取得
-			while(rs.next()) { //
-				String userName = rs.getString("name"); // DBで取得したデータをString型の変数に代入
-				String userPass = rs.getString("pass");
-
-				account.add(userName); // DBで取得したデータを配列に格納
-				account.add(userPass);
-			}
-
-			rs.close(); // メモリの使用を終了する
-			st.close();
-			con.close();
-
-			return account;
-
-		}catch(Exception e) { // 例外処理
-			e.printStackTrace();
-			System.out.println("データの取得に失敗しました。");
-		}
-	}
-
 	public List<String> selectUser(String name,String pass) {
 		if(con == null)
 			getConnection();
@@ -85,6 +50,7 @@ public class CandPDAO {
 			e.printStackTrace();
 			System.out.println("データの取得に失敗しました。");
 		}
+		return null;
 	}
 
 	public int addAc(String name,String pass) {
@@ -109,6 +75,7 @@ public class CandPDAO {
 			e.printStackTrace();
 			System.out.println("レコードの操作に失敗しました。");
 		}
+		return 0;
 	}
 
 	private void getConnection() {

@@ -62,15 +62,6 @@ public class CandPServlet extends HttpServlet {
 				RequestDispatcher rd = request.getRequestDispatcher("/intopage.jsp");
 				rd.forward(request, response);
 
-				// 入力値とDB内データの一致確認[if(入力値.equals(DBのデータ))]
-//				if(yourName.equals(acName)&&yourPass.equals(acPass)) {
-//					HttpSession session = request.getSession(); // ???
-//					session.setAttribute("okLogin", yourName);
-//
-//					// 上記が一致したら、intopage.jspへフォワード
-//					RequestDispatcher rd = request.getRequestDispatcher("/intopage.jsp");
-//					rd.forward(request,response);
-
 			}else if(action.equals("add")) { // actionがadd（追加）の場合、以下の処理を実施
 				// 登録フォームの入力値を取得（String型の変数に入力値を代入）
 				String newName = request.getParameter("nyourname");
@@ -112,6 +103,7 @@ public class CandPServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
+
 	}
 
 }
