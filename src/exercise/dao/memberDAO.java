@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +53,75 @@ public class memberDAO {
 				System.out.println("データの取得に失敗しました。");
 			}
 		return null;
+	}
+
+	public List<MemberBean> sortBirth(boolean isUp) {
+		if(con == null)
+			getConnection();
+
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		String sql;
+
+		try {
+			if(isUp)
+				sql = "SELECT * FROM member ORDER BY birthday";
+			else
+				sql = "SELECT * FROM member ORDER BY birthday desc";
+
+
+				st = con.prepareStatement(sql);
+				rs = st.executeQuery();
+
+				List<MemberBean> lineup = new ArrayList<MemberBean>();
+				while(rs.next()) {
+					String memName = rs.getString("name");
+					int memHeight = rs.getInt("height");
+					String memBirth = rs.getString("birthday");
+					String memBlood = rs.getString("bloodtype");
+					MemberBean mbean = new MemberBean(memName,memHeight,memBirth,memBlood);
+					lineup.add(mbean);
+				}
+
+				st.close();
+				rs.close();
+				con.close();
+
+				return lineup;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("レコードの操作に失敗しました。");
+		}
+		return null;
+	}
+
+	public int favoMem(String favoName,int code) {
+		if(con == null);
+		getConnection();
+
+		PreparedStatement st = null;
+		try {
+			String sql = "UPDATE userinfo SET favomember=? WHERE code=?";
+			st = con.prepareStatement(sql);
+
+			st.setString(1, favoName);
+			st.setInt(2, code);
+
+			int rows = st.executeUpdate();
+
+			st.close();
+			con.close();
+
+			return rows;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("レコードの操作に失敗しました。");
+		}
+		return 0;
+
+
 	}
 
 	private void getConnection(){

@@ -9,22 +9,32 @@
 </head>
 <body>
 
-<h3 style="color:#FF6347">${message}</h3>
+<h2 style="color:#FFD700">～${intoName}様、ようこそ～</h2>
 
-<p>
-<a href="member.jsp">Cinderella and Prince</a>
-</p>
-<p>
-<a href="news.jsp">News</a>
-</p>
-<p>
-<a href="disc.jsp">Discography</a>
-</p>
+<p></p><form action="/jTraining/MemberServlet" method="post">
+<input type="hidden" name="action" value="group">
+<input type="submit" value="Cinderella and Prince">
+</form>
 
-<br/>
-<p>
-<a style="color:red" href="homepage.jsp">${error}</a>
-</p>
+<p></p><form action="/jTraining/???Servlet" method="post">
+<input type="hidden" name="action" value="ns">
+<input type="submit" value="News">
+</form>
+
+<p></p><form action=/jTraining/???Servlet method="post">
+<input type="hidden" name="action" value="disc">
+<input type="submit" value="Product">
+</form>
+
+<p></p><form action="/jTraining/CandPServlet" method="post">
+<input type="hidden" name="action" value="mypg">
+<input type="submit" value="My Page">
+</form>
+
+<p></p><form action="/jTraining/CandPServlet" method="post">
+<input type="hidden" name="action" value="logout">
+<input type="submit" value="出口">
+</form>
 
 </body>
 </html>

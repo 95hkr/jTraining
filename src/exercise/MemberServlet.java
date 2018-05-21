@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import exercise.bean.MemberBean;
 import exercise.dao.memberDAO;
@@ -34,14 +35,43 @@ public class MemberServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.setContentType("text/html;charset=UTF-8");
+		HttpSession session = request.getSession();
 
 		try {
+			String action = request.getParameter("action");
+
 			memberDAO mDao = new memberDAO();
+
+			if(action.equals("group")) {
 			List<MemberBean> lineup = mDao.findAll();
-			request.setAttribute("member", lineup);
+			session.setAttribute("member", lineup);
 
 			RequestDispatcher rd = request.getRequestDispatcher("/member.jsp");
 			rd.forward(request, response);
+
+			} else if(action.equals("sort")) {
+				String key = request.getParameter("key");
+				List<MemberBean> lineup;
+				if(key.equals("memBirth_asc"))
+					lineup = mDao.sortBirth(true);
+				else
+					lineup = mDao.sortBirth(false);
+
+				session.setAttribute("member", lineup);
+				RequestDispatcher rd = request.getRequestDispatcher("/member.jsp");
+				rd.forward(request, response);
+
+			} else if(action.equals("favo")) { // actionがお気に入りの場合
+				int code = (int) session.getAttribute("intoCode"); // ログインしている人のコード
+				String favoName = request.getParameter("bName"); // お気に入りのメンバーの名前を取得
+				int rows = mDao.favoMem(favoName,code); // 上記をDAOに送る
+
+				if(rows == 1) {
+					session.setAttribute("favoMessage", favoName + "をお気に入りに追加しました。");
+				}
+				RequestDispatcher rd = request.getRequestDispatcher("/member.jsp");
+					rd.forward(request, response);
+				}
 
 		}catch (Exception e) {
 			e.printStackTrace();

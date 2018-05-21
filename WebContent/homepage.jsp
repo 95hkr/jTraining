@@ -15,8 +15,6 @@
 <form action="/jTraining/CandPServlet" method="post">
 お名前<input type="text" name="yourname"/><br/>
 合言葉（英数字）<input type="password" name="pw"/><br/>
-
-
 <input type="hidden" name="action" value="login"><br/>
 <input type="submit" value="Enter">
 </form>

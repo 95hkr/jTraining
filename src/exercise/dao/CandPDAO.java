@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import exercise.bean.CandPBean;
+
 public class CandPDAO {
 	private Connection con;
 
@@ -15,7 +17,7 @@ public class CandPDAO {
 		getConnection();
 	}
 
-	public List<String> selectUser(String name,String pass) {
+	public List<CandPBean> selectUser(String name,String pass) {
 		if(con == null)
 			getConnection();
 
@@ -23,21 +25,22 @@ public class CandPDAO {
 		ResultSet rs = null;
 
 		try {
-			String sql = "SELECT * FROM userinfo WHERE name = ? and pass = ?"; //
+			String sql = "SELECT * FROM userinfo WHERE name = ? and pass = ?";
 			st = con.prepareStatement(sql);
 			st.setString(1, name);
 			st.setString(2, pass);
 			rs = st.executeQuery();
 
-			List<String> account = new ArrayList<String>(); // ArrayListクラスのインスタンス化
+			List<CandPBean> account = new ArrayList<CandPBean>(); // ArrayListクラスのインスタンス化
 
 			// DBからアカウントの情報を取得
 			while(rs.next()) { //
 				String userName = rs.getString("name"); // DBで取得したデータをString型の変数に代入
 				String userPass = rs.getString("pass");
+				int userCode = rs.getInt("code");
 
-				account.add(userName); // DBで取得したデータを配列に格納
-				account.add(userPass);
+				CandPBean cpBean = new CandPBean(userName,userPass,userCode);
+				account.add(cpBean);
 			}
 
 			rs.close(); // メモリの使用を終了する
@@ -50,7 +53,7 @@ public class CandPDAO {
 			e.printStackTrace();
 			System.out.println("データの取得に失敗しました。");
 		}
-		return null;
+			return null;
 	}
 
 	public int addAc(String name,String pass) {

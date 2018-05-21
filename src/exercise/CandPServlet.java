@@ -9,7 +9,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import exercise.bean.CandPBean;
 import exercise.dao.CandPDAO;
 
 /**
@@ -48,19 +50,25 @@ public class CandPServlet extends HttpServlet {
 				String yourName = request.getParameter("yourname");
 				String yourPass = request.getParameter("pw");
 
-				List<String> account = cpDao.selectUser(yourName,yourPass); // 入力値をメソッドに当てはめる
+				List<CandPBean> account = cpDao.selectUser(yourName,yourPass); // 入力値をメソッドに当てはめる
 
 				if(account.size() >= 1) {
-					request.setAttribute("message", "～ " + yourName + "様、ようこそ ～");
+					CandPBean cpBean = account.get(0);
+					int userCode = cpBean.getCode();
+
+					HttpSession session = request.getSession();
+					session.setAttribute("intoName", yourName);
+					session.setAttribute("intoCode", userCode);
+
+					RequestDispatcher rd = request.getRequestDispatcher("/intopage.jsp");
+					rd.forward(request, response);
 
 				}else {
-
 					request.setAttribute("message","入館申請をおこなってください。");
 					request.setAttribute("error", "Entranceへ");
+					RequestDispatcher rd = request.getRequestDispatcher("/errInto.jsp");
+					rd.forward(request, response);
 				}
-
-				RequestDispatcher rd = request.getRequestDispatcher("/intopage.jsp");
-				rd.forward(request, response);
 
 			}else if(action.equals("add")) { // actionがadd（追加）の場合、以下の処理を実施
 				// 登録フォームの入力値を取得（String型の変数に入力値を代入）
@@ -80,7 +88,7 @@ public class CandPServlet extends HttpServlet {
 
 				// 件数が１だった場合以下の処理を実行
 				if(rows == 1) {
-					request.setAttribute("setAc", newName + "様の鍵が完成しました。"); // seAcに右の名前や分を入れる、jspで${setAc}と使用する
+					request.setAttribute("setAc", newName + "様の鍵が完成しました。"); // seAcに右の名前や文を入れる、jspで${setAc}と使用する
 				// その他の場合以下の処理を実行
 				}else {
 					request.setAttribute("message", "登録できませんでした。"); // jspで${message}と使用する
@@ -88,6 +96,14 @@ public class CandPServlet extends HttpServlet {
 				// signok.jspへフォワード
 				RequestDispatcher rd = request.getRequestDispatcher("/signok.jsp");
 				rd.forward(request,response);
+
+			}else if(action.equals("logout")) {
+				HttpSession session = request.getSession(false);
+				if(session != null) {
+					session.invalidate();
+				}
+					RequestDispatcher rd = request.getRequestDispatcher("/homepage.jsp");
+					rd.forward(request, response);
 			}
 
 			// 例外処理
@@ -96,6 +112,7 @@ public class CandPServlet extends HttpServlet {
 			System.out.println("データの取得に失敗しました。");
 		}
 	}
+
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
