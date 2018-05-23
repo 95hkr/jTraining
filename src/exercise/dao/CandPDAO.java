@@ -38,8 +38,10 @@ public class CandPDAO {
 				String userName = rs.getString("name"); // DBで取得したデータをString型の変数に代入
 				String userPass = rs.getString("pass");
 				int userCode = rs.getInt("code");
+				String userFavomem = rs.getString("favomember");
+				String userBirth = rs.getString("Birthday");
 
-				CandPBean cpBean = new CandPBean(userName,userPass,userCode);
+				CandPBean cpBean = new CandPBean(userName,userPass,userCode,userFavomem,userBirth);
 				account.add(cpBean);
 			}
 
@@ -56,17 +58,18 @@ public class CandPDAO {
 			return null;
 	}
 
-	public int addAc(String name,String pass) {
+	public int addAc(String name,String pass,String Birthday) {
 		if(con == null)
 			getConnection();
 
 		PreparedStatement st = null;
 		try {
 			// DBに追加
-			String sql = "INSERT INTO userinfo(name,pass)VALUES(?,?)";
+			String sql = "INSERT INTO userinfo(name,pass,Birthday)VALUES(?,?,?)";
 			st = con.prepareStatement(sql);
 			st.setString(1, name); // VALUESに代入（数字は1つ目、2つ目という意味で使用）
 			st.setString(2, pass);
+			st.setString(3, Birthday);
 			int rows = st.executeUpdate();
 
 			st.close();
@@ -77,6 +80,29 @@ public class CandPDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println("レコードの操作に失敗しました。");
+		}
+		return 0;
+	}
+
+
+
+	public int delFavo(int code) {
+		if(con == null)
+			getConnection();
+
+		PreparedStatement st = null;
+		try {
+
+			String sql = "DELETE FROM userinfo WHERE code=?";
+			st = con.prepareStatement(sql);
+			st.setInt(1, code);
+			int rows = st.executeUpdate();
+
+			return rows;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("データの取得に失敗しました。");
 		}
 		return 0;
 	}

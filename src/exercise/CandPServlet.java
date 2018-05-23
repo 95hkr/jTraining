@@ -38,13 +38,15 @@ public class CandPServlet extends HttpServlet {
 
 		request.setCharacterEncoding("UTF-8");
 
+		HttpSession session = request.getSession();
+
 		try {
 		// リクエストパラメータの取得
 		String action = request.getParameter("action");
 
-			if(action.equals("login")) { // actionがlogin（ログイン）の場合、以下の処理を実施
+		CandPDAO cpDao = new CandPDAO(); // CandPDAOクラスをインスタンス化
 
-				CandPDAO cpDao = new CandPDAO(); // CandPDAOクラスをインスタンス化
+			if(action.equals("login")) { // actionがlogin（ログイン）の場合、以下の処理を実施
 
 				// ログインフォームの入力値の取得（String型の変数に入力した値を代入）
 				String yourName = request.getParameter("yourname");
@@ -55,10 +57,19 @@ public class CandPServlet extends HttpServlet {
 				if(account.size() >= 1) {
 					CandPBean cpBean = account.get(0);
 					int userCode = cpBean.getCode();
+					String userPass = cpBean.getPass();
+					String userFavomem = cpBean.getFavomember();
+					String userBirth = cpBean.getBirthday();
 
-					HttpSession session = request.getSession();
-					session.setAttribute("intoName", yourName);
+					session.setAttribute("intoName", yourName); // セッションスコープに入れる
 					session.setAttribute("intoCode", userCode);
+
+					session.setAttribute("mypass", userPass);
+					session.setAttribute("mybirth", userBirth);
+//					if(userFavomem.equals(null))
+//						session.setAttribute("myFmem", "あなたの選択をお待ちしております。");
+//					else
+						session.setAttribute("myFmem", userFavomem);
 
 					RequestDispatcher rd = request.getRequestDispatcher("/intopage.jsp");
 					rd.forward(request, response);
@@ -70,10 +81,13 @@ public class CandPServlet extends HttpServlet {
 					rd.forward(request, response);
 				}
 
+
+
 			}else if(action.equals("add")) { // actionがadd（追加）の場合、以下の処理を実施
 				// 登録フォームの入力値を取得（String型の変数に入力値を代入）
 				String newName = request.getParameter("nyourname");
 				String newPass = request.getParameter("npw");
+				String newBirth = request.getParameter("mybirth");
 
 				// 空欄だった場合
 				if(newName.equals("") || newPass.equals("")) {
@@ -81,10 +95,9 @@ public class CandPServlet extends HttpServlet {
 					rd.forward(request, response);
 					return;
 				}
-
 				// CandPDAOクラスのaddAcメソッドに入力値を代入
-				CandPDAO cpDao = new CandPDAO(); // CandPDAOクラスをインスタンス化
-				int rows = cpDao.addAc(newName, newPass); // ???addAcメソッドの入力値を件数に代入???
+				cpDao = new CandPDAO(); // CandPDAOクラスをインスタンス化
+				int rows = cpDao.addAc(newName, newPass,newBirth); // ???addAcメソッドの入力値を件数に代入???
 
 				// 件数が１だった場合以下の処理を実行
 				if(rows == 1) {
@@ -97,13 +110,33 @@ public class CandPServlet extends HttpServlet {
 				RequestDispatcher rd = request.getRequestDispatcher("/signok.jsp");
 				rd.forward(request,response);
 
+
+
 			}else if(action.equals("logout")) {
-				HttpSession session = request.getSession(false);
+				session = request.getSession(false);
 				if(session != null) {
 					session.invalidate();
 				}
 					RequestDispatcher rd = request.getRequestDispatcher("/homepage.jsp");
 					rd.forward(request, response);
+
+
+
+			}else if(action.equals("mypg")) { // MyPageメニューを押した場合
+				// mypage.jspへ
+				RequestDispatcher rd = request.getRequestDispatcher("/mypage.jsp");
+				rd.forward(request, response);
+
+
+
+			}else if(action.equals("acDele")) {
+				int code = (int) session.getAttribute("intoCode");
+				int rows = cpDao.delFavo(code);
+
+				if(rows == 1) {
+					RequestDispatcher rd = request.getRequestDispatcher("/delcomp.jsp");
+					rd.forward(request, response);
+				}
 			}
 
 			// 例外処理

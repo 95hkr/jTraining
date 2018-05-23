@@ -33,12 +33,13 @@ public class memberDAO {
 
 			// DBからアカウントの情報を取得
 			while(rs.next()) { //
+				int memCode = rs.getInt("code");
 				String memName = rs.getString("name"); // DBで取得したデータをString型の変数に代入
 				int memHeight = rs.getInt("height");
 				String memBirth = rs.getString("birthday");
 				String memBlood = rs.getString("bloodtype");
 
-				MemberBean mbean = new MemberBean(memName,memHeight,memBirth,memBlood);
+				MemberBean mbean = new MemberBean(memCode,memName,memHeight,memBirth,memBlood);
 				lineup.add(mbean);
 			}
 
@@ -54,6 +55,8 @@ public class memberDAO {
 			}
 		return null;
 	}
+
+
 
 	public List<MemberBean> sortBirth(boolean isUp) {
 		if(con == null)
@@ -75,11 +78,12 @@ public class memberDAO {
 
 				List<MemberBean> lineup = new ArrayList<MemberBean>();
 				while(rs.next()) {
+					int memCode = rs.getInt("code");
 					String memName = rs.getString("name");
 					int memHeight = rs.getInt("height");
 					String memBirth = rs.getString("birthday");
 					String memBlood = rs.getString("bloodtype");
-					MemberBean mbean = new MemberBean(memName,memHeight,memBirth,memBlood);
+					MemberBean mbean = new MemberBean(memCode,memName,memHeight,memBirth,memBlood);
 					lineup.add(mbean);
 				}
 
@@ -95,6 +99,8 @@ public class memberDAO {
 		}
 		return null;
 	}
+
+
 
 	public int favoMem(String favoName,int code) {
 		if(con == null);
@@ -120,9 +126,37 @@ public class memberDAO {
 			System.out.println("レコードの操作に失敗しました。");
 		}
 		return 0;
-
-
 	}
+
+
+
+	public int nullFavo(int code) {
+		if(con == null)
+			getConnection();
+
+		PreparedStatement st = null;
+
+		try {
+			String sql = "UPDATE userinfo SET favomember=null WHERE code=?";
+			st = con.prepareStatement(sql);
+
+			st.setInt(1, code);
+
+			int rows = st.executeUpdate();
+
+			st.close();
+			con.close();
+
+			return rows;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("レコードの操作に失敗しました。");
+		}
+		return 0;
+	}
+
+
 
 	private void getConnection(){
 

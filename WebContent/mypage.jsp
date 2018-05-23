@@ -11,18 +11,23 @@
 <h2 style="color:#6495ED">～Your Infomation～</h2>
 <hr/>
 
-<table border="1" cellspacing="0">
-	<tr><td>Name</td><td>Pass</td><td>Favorite</td></tr>
+<p>⁑Name⁑ ${intoName}</p>
 
-	<c:forEach items="${}" var="">
-	<tr><td></td><td>}</td><td></td><td></td>
-	<td><form action="/jTraining/CandPServlet" method="post">
-	<input type="hidden" name="action" value="favo">
-	<button type="submit" name="action" value="${mem.memName}">♡</button></form></td></tr>
-	</c:forEach>
+<p>⁑Pass⁑ ${mypass}</p>
 
-</table>
+<p>⁑BirthDay⁑ ${mybirth}</p>
 
+<p>⁑Favorite Member⁑ ${myFmem} ${nullmessage}</p>
+
+<form action="/jTraining/MemberServlet" method="post">
+<input type="hidden" name="action" value="nullfavo">
+<input type="submit" value="Reset">
+</form>
+
+<hr/>
+<p><a href="/jTraining/intopage.jsp">Menuへ</a></p>
+
+<a href="/jTraining/reallyDele.jsp">アカウントを削除</a>
 
 </body>
 </html>

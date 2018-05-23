@@ -16,7 +16,7 @@
 
 	<c:forEach items="${member}" var="mem">
 	<!-- ↓メンバー名をリンクでServletに送ったとして、どのページに送るか（1人ずつのページにするのか） -->
-	<tr><td><a href="/jTraining/MemberServlet">${mem.memName}</a></td><td>${mem.memHeight}</td>
+	<tr><td><a href="/jTraining/MemberServlet?action=mInfo">${mem.memName}</a></td><td>${mem.memHeight}</td>
 	<td>${mem.memBirth}</td><td>${mem.memBlood}</td>
 
 	<td><form action="/jTraining/MemberServlet" method="post">

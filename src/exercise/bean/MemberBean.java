@@ -3,12 +3,14 @@ package exercise.bean;
 import java.io.Serializable;
 
 public class MemberBean implements Serializable{
+	private int memCode;
 	private String memName;
 	private int memHeight;
 	private String memBirth;
 	private String memBlood;
 
-	public MemberBean(String memName,int memHeight,String memBirth,String memBlood) {
+	public MemberBean(int memCode,String memName,int memHeight,String memBirth,String memBlood) {
+		this.memCode = memCode;
 		this.memName = memName;
 		this.memHeight = memHeight;
 		this.memBirth = memBirth;
@@ -17,6 +19,14 @@ public class MemberBean implements Serializable{
 
 	public MemberBean() {
 
+	}
+
+	public int getMemCode() {
+		return memCode;
+	}
+
+	public void setMemCode(int memCode) {
+		this.memCode = memCode;
 	}
 
 	public String getMemName() {
