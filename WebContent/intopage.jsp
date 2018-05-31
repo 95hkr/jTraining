@@ -10,30 +10,36 @@
 <body>
 
 <h2 style="color:#FFD700">～${intoName}様、ようこそ～</h2>
-
-<p></p><form action="/jTraining/MemberServlet" method="post">
+<br/>
+<form action="/jTraining/MemberServlet" method="post">
 <input type="hidden" name="action" value="group">
 <input type="submit" value="Cinderella and Prince">
 </form>
-
-<p></p><form action="/jTraining/???Servlet" method="post">
+<br/>
+<br/>
+<form action="/jTraining/news.jsp" method="post">
 <input type="hidden" name="action" value="ns">
 <input type="submit" value="News">
 </form>
-
-<p></p><form action=/jTraining/???Servlet method="post">
+<br/>
+<br/>
+<form action=/jTraining/product.jsp method="post">
 <input type="hidden" name="action" value="disc">
 <input type="submit" value="Product">
 </form>
-
-<p></p><form action="/jTraining/CandPServlet" method="post">
+<br/>
+<br/>
+<form action="/jTraining/CandPServlet" method="post">
 <input type="hidden" name="action" value="mypg">
 <input type="submit" value="My Page">
 </form>
-
-<p></p><form action="/jTraining/CandPServlet" method="post">
+<br/>
+<br/>
+<hr>
+<br/>
+<form action="/jTraining/CandPServlet" method="post">
 <input type="hidden" name="action" value="logout">
-<input type="submit" value="出口">
+<input type="submit" value="Exit">
 </form>
 
 </body>

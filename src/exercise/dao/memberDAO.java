@@ -142,7 +142,8 @@ public class memberDAO {
 
 			st.setInt(1, code);
 
-			int rows = st.executeUpdate();
+			int rows =
+					st.executeUpdate();
 
 			st.close();
 			con.close();
@@ -154,6 +155,44 @@ public class memberDAO {
 			System.out.println("レコードの操作に失敗しました。");
 		}
 		return 0;
+	}
+
+
+
+	public List<MemberBean> memInfo(int code){
+		if(con == null)
+			getConnection();
+
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		try {
+			String sql = "SELECT * FROM member WHERE code=?";
+			st = con.prepareStatement(sql);
+			st.setInt(1, code);
+			rs = st.executeQuery();
+
+			List<MemberBean> lineup = new ArrayList<MemberBean>();
+
+			while(rs.next()) {
+				int memCode = rs.getInt("code");
+				String memName = rs.getString("name");
+				int memHeight = rs.getInt("height");
+				String memBirth = rs.getString("birthday");
+				String memBlood = rs.getString("bloodtype");
+
+				MemberBean mBean = new MemberBean(memCode,memName,memHeight,memBirth,memBlood);
+				lineup.add(mBean);
+			}
+			st.close();
+			rs.close();
+			con.close();
+
+			return lineup;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 

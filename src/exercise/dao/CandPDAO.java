@@ -86,7 +86,7 @@ public class CandPDAO {
 
 
 
-	public int delFavo(int code) {
+	public int delUser(int code) {
 		if(con == null)
 			getConnection();
 
@@ -102,10 +102,12 @@ public class CandPDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			System.out.println("データの取得に失敗しました。");
+			System.out.println("レコードの操作に失敗しました。");
 		}
 		return 0;
 	}
+
+
 
 	private void getConnection() {
 

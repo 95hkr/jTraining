@@ -48,18 +48,6 @@ public class MemberServlet extends HttpServlet {
 			List<MemberBean> lineup = mDao.findAll();
 			session.setAttribute("member", lineup);
 
-			MemberBean mBean = lineup.get(0);
-
-			String memName = mBean.getMemName();
-			int memHeight = mBean.getMemHeight();
-			String memBirth = mBean.getMemBirth();
-			String memBlood = mBean.getMemBirth();
-
-			session.setAttribute("mName", memName);
-			session.setAttribute("mHeight", memHeight);
-			session.setAttribute("mBirth", memBirth);
-			session.setAttribute("mBlood", memBlood);
-
 			RequestDispatcher rd = request.getRequestDispatcher("/member.jsp");
 			rd.forward(request, response);
 
@@ -94,12 +82,13 @@ public class MemberServlet extends HttpServlet {
 
 
 			}else if(action.equals("nullfavo")) {
-				int code = (int) session.getAttribute("intoCode");
+				int code = (int)
+						session.getAttribute("intoCode");
 
 				int rows = mDao.nullFavo(code);
 
 				if(rows == 1) {
-					session.setAttribute("nullmessage", "あなたの選択をお待ちしております。");
+					session.setAttribute("myFmem", "あなたの選択をお待ちしております。");
 				}
 
 				RequestDispatcher rd = request.getRequestDispatcher("/mypage.jsp");
@@ -108,6 +97,25 @@ public class MemberServlet extends HttpServlet {
 
 
 			}else if(action.equals("mInfo")) {
+				int memCode = Integer.parseInt(request.getParameter("memCode"));
+				List<MemberBean> lineup = mDao.memInfo(memCode);
+
+				if(lineup.size() >= 1) {
+					MemberBean mBean = lineup.get(0);
+
+					int mCode = mBean.getMemCode();
+					String memName = mBean.getMemName();
+					int memHeight = mBean.getMemHeight();
+					String memBirth = mBean.getMemBirth();
+					String memBlood = mBean.getMemBlood();
+
+					session.setAttribute("mCode", mCode);
+					session.setAttribute("mName", memName);
+					session.setAttribute("mHeight", memHeight);
+					session.setAttribute("mBirth", memBirth);
+					session.setAttribute("mBlood", memBlood);
+				}
+
 				RequestDispatcher rd = request.getRequestDispatcher("/memberPage.jsp");
 				rd.forward(request, response);
 			}

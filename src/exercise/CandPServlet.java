@@ -56,20 +56,12 @@ public class CandPServlet extends HttpServlet {
 
 				if(account.size() >= 1) {
 					CandPBean cpBean = account.get(0);
+
 					int userCode = cpBean.getCode();
-					String userPass = cpBean.getPass();
-					String userFavomem = cpBean.getFavomember();
-					String userBirth = cpBean.getBirthday();
 
 					session.setAttribute("intoName", yourName); // セッションスコープに入れる
+					session.setAttribute("intoPass", yourPass);
 					session.setAttribute("intoCode", userCode);
-
-					session.setAttribute("mypass", userPass);
-					session.setAttribute("mybirth", userBirth);
-//					if(userFavomem.equals(null))
-//						session.setAttribute("myFmem", "あなたの選択をお待ちしております。");
-//					else
-						session.setAttribute("myFmem", userFavomem);
 
 					RequestDispatcher rd = request.getRequestDispatcher("/intopage.jsp");
 					rd.forward(request, response);
@@ -123,6 +115,26 @@ public class CandPServlet extends HttpServlet {
 
 
 			}else if(action.equals("mypg")) { // MyPageメニューを押した場合
+				String yourName = (String) session.getAttribute("intoName");
+				String yourPass = (String) session.getAttribute("intoPass");
+
+				List<CandPBean> account = cpDao.selectUser(yourName,yourPass);
+				CandPBean cpBean = account.get(0);
+
+				String userName = cpBean.getName();
+				String userPass = cpBean.getPass();
+				String userBirth = cpBean.getBirthday();
+				String userFavomem = cpBean.getFavomember();
+
+				session.setAttribute("myname", userName);
+				session.setAttribute("mypass", userPass);
+				session.setAttribute("mybirth", userBirth);
+
+				if(userFavomem == null) {
+					session.setAttribute("myFmem", "あなたの選択をお待ちしております。");
+				}else{
+					session.setAttribute("myFmem", userFavomem);
+				}
 				// mypage.jspへ
 				RequestDispatcher rd = request.getRequestDispatcher("/mypage.jsp");
 				rd.forward(request, response);
@@ -131,7 +143,7 @@ public class CandPServlet extends HttpServlet {
 
 			}else if(action.equals("acDele")) {
 				int code = (int) session.getAttribute("intoCode");
-				int rows = cpDao.delFavo(code);
+				int rows = cpDao.delUser(code);
 
 				if(rows == 1) {
 					RequestDispatcher rd = request.getRequestDispatcher("/delcomp.jsp");

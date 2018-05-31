@@ -17,7 +17,7 @@
 
 <p>⁑BirthDay⁑ ${mybirth}</p>
 
-<p>⁑Favorite Member⁑ ${myFmem} ${nullmessage}</p>
+<p>⁑Favorite Member⁑ ${myFmem}</p>
 
 <form action="/jTraining/MemberServlet" method="post">
 <input type="hidden" name="action" value="nullfavo">
